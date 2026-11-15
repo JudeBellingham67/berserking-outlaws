@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Berserking Outlaws — Complete Team Leaderboard</title>
+  <style>
+    :root {
+      --bg: #161512;
+      --surface: #262421;
+      --surface-hover: #302e2a;
+      --border: #3c3934;
+      --text: #e6e6e6;
+      --muted: #9e9e9e;
+      --accent: #d59120;
+      --accent-hover: #e5a332;
+      --gold: #ffd700;
+      --silver: #c0c0c0;
+      --bronze: #cd7f32;
+      --green: #629924;
+      --red: #cc3333;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 1.5rem 1rem 3rem;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    header h1 {
+      font-size: 2.1rem;
+      letter-spacing: 0.5px;
+      color: #fff;
+    }
+
+    header h1 span {
+      color: var(--accent);
+    }
+
+    header p {
+      color: var(--muted);
+      margin-top: 0.35rem;
+      font-size: 0.95rem;
+    }
+
+    header a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    header a:hover {
+      text-decoration: underline;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface);
+      padding: 1rem 1.25rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      margin-bottom: 1.25rem;
+    }
+
+    .control-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    label {
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    select, input, button {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.8rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    button {
+      background: var(--accent);
+      color: #111;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s, opacity 0.15s;
+    }
+
+    button:hover:not(:disabled) {
+      background: var(--accent-hover);
+    }
+
+    button.secondary-btn {
+      background: #36332e;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    button.secondary-btn:hover:not(:disabled) {
+      background: #44403a;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .progress-wrapper {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.9rem 1.2rem;
+      border-radius: 8px;
+      margin-bottom: 1.25rem;
+      display: none;
+    }
+
+    .progress-text {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 0.45rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--bg);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      transition: width 0.2s ease;
+    }
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0.9rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.9rem;
+      text-align: center;
+    }
+
+    .stat-card .value {
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .stat-card .label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 0.15rem;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+    }
+
+    .tab-btn {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid transparent;
+      padding: 0.45rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: var(--surface);
+      color: var(--accent);
+      border-color: var(--border);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .table-container {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th, td {
+      padding: 0.8rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.93rem;
+    }
+
+    th {
+      background: #1f1d1a;
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    th:hover {
+      color: #fff;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background: var(--surface-hover);
+    }
+
+    .rank {
+      font-weight: 700;
+      width: 55px;
+    }
+
+    .rank-1 { color: var(--gold); font-size: 1.05rem; }
+    .rank-2 { color: var(--silver); font-size: 1.02rem; }
+    .rank-3 { color: var(--bronze); font-size: 1rem; }
+
+    .player-link {
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .player-link:hover {
+      color: var(--accent);
+    }
+
+    .title-badge {
+      background: var(--accent);
+      color: #111;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 3px;
+    }
+
+    .leader-tag {
+      background: rgba(213, 145, 32, 0.18);
+      color: var(--accent);
+      border: 1px solid rgba(213, 145, 32, 0.4);
+      font-size: 0.7rem;
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .points-cell {
+      font-weight: 700;
+      color: var(--accent);
+      font-size: 1.05rem;
+    }
+
+    .zero-points {
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .badge-type {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: #33302b;
+      color: var(--text);
+    }
+
+    .badge-battle {
+      background: rgba(213, 145, 32, 0.2);
+      color: var(--accent);
+    }
+
+    .badge-swiss {
+      background: rgba(98, 153, 36, 0.2);
+      color: #8ed147;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: var(--muted);
+    }
+
+    .status-note {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>⚔️ <span>Berserking Outlaws</span> Leaderboard</h1>
+      <p>
+        All-Time Points &amp; Tournament Tracker for
+        <a href="https://lichess.org/team/berserking-outlaws" target="_blank" rel="noopener">lichess.org/team/berserking-outlaws</a>
+      </p>
+    </header>
+
+    <div class="controls">
+      <div class="control-group">
+        <label for="modeSelect">Mode:</label>
+        <select id="modeSelect">
+          <option value="all" selected>Team Battles + Team Arenas + Swiss</option>
+          <option value="teamBattle">Strictly Team Battles Only</option>
+          <option value="arenaAndBattle">Team Battles + Team Arenas</option>
+        </select>
+
+        <label for="battleLimit">Events:</label>
+        <select id="battleLimit">
+          <option value="all" selected>All Events (Entire Team History)</option>
+          <option value="250">Last 250 Events</option>
+          <option value="100">Last 100 Events</option>
+          <option value="50">Last 50 Events</option>
+          <option value="25">Last 25 Events</option>
+        </select>
+
+        <label for="rosterFilter">Show:</label>
+        <select id="rosterFilter">
+          <option value="all" selected>All Team Members (incl. 0 pts)</option>
+          <option value="scorers">Only Players With Points (&gt; 0)</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <input type="text" id="searchInput" placeholder="Search player..." />
+        <button id="fetchBtn">Scan Live Lichess API</button>
+        <button id="exportBtn" class="secondary-btn">Export CSV</button>
+      </div>
+    </div>
+
+    <div class="progress-wrapper" id="progressWrapper">
+      <div class="progress-text">
+        <span id="progressStatus">Connecting to Lichess API...</span>
+        <span id="progressCount">0 / 0</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+
+    <div class="stats-bar">
+      <div class="stat-card">
+        <div class="value" id="statBattles">0</div>
+        <div class="label">Tournaments Scanned</div>
+      </div>
+      <div class="stat-card">
+        <div class="value" id="statScorers">0</div>
+        <div class="label">Point Scorers</div>
+      </div>
+      <div class="stat-card">
+        <div class="value" id="statMembers">0</div>
+        <div class="label">Total Team Members</div>
+      </div>
+      <div class="stat-card">
+        <div class="value" id="statTotalPoints">0</div>
+        <div class="label">Total Team Points</div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="leaderboardTab">🏆 Player Leaderboard</button>
+      <button class="tab-btn" data-tab="battlesTab">⚔️ Scanned Tournaments (<span id="tabBattleCount">0</span>)</button>
+    </div>
+
+    <div class="status-note">
+      <span id="lastUpdatedText">Ready to scan all live Lichess team events.</span>
+      <span>Click any column header to sort.</span>
+    </div>
+
+    <div id="leaderboardTab" class="tab-content active">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th data-sort="rank">#</th>
+              <th data-sort="username">Player</th>
+              <th data-sort="points">Total Points ▼</th>
+              <th data-sort="battles">Events Played</th>
+              <th data-sort="avg">Avg Pts / Event</th>
+              <th data-sort="best">Best Event Score</th>
+              <th data-sort="rating">Blitz / Rapid Rating</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody">
+            <tr>
+              <td colspan="7" class="empty-state">Initializing Berserking Outlaws leaderboard...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="battlesTab" class="tab-content">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Tournament Name</th>
+              <th>Type</th>
+              <th>Date</th>
+              <th>Outlaws Players</th>
+              <th>Team Points</th>
+              <th>Top Outlaw Scorer</th>
+            </tr>
+          </thead>
+          <tbody id="battlesBody">
+            <tr>
+              <td colspan="6" class="empty-state">No tournaments scanned yet.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TEAM_ID = "berserking-outlaws";
+    const CACHE_KEY = "berserking_outlaws_leaderboard_v4_fresh";
+
+    const KNOWN_LEADERS = new Set([
+      "vjc06", "xtc15", "ollie_b_bommel", "theberserker67",
+      "billu_badsa", "lokiy47", "crossingrooks", "pandany03", "i-love-pawns"
+    ]);
+
+    const SEED_TOURNAMENT_IDS = [
+      "j4nAYzIp", "quc1SpRd", "aPstmbDZ", "bRrlMDUL",
+      "6MENOlzR", "T3Moieta", "8EnJ7UIK", "4PpYjV4a"
+    ];
+
+    let playersData = [];
+    let scannedTournaments = [];
+    let currentSort = { key: "points", asc: false };
+    let isFetching = false;
+
+    const fetchBtn = document.getElementById("fetchBtn");
+    const exportBtn = document.getElementById("exportBtn");
+    const modeSelect = document.getElementById("modeSelect");
+    const battleLimitSelect = document.getElementById("battleLimit");
+    const rosterFilterSelect = document.getElementById("rosterFilter");
+    const searchInput = document.getElementById("searchInput");
+    const progressWrapper = document.getElementById("progressWrapper");
+    const progressStatus = document.getElementById("progressStatus");
+    const progressCount = document.getElementById("progressCount");
+    const progressFill = document.getElementById("progressFill");
+    const leaderboardBody = document.getElementById("leaderboardBody");
+    const battlesBody = document.getElementById("battlesBody");
+    const lastUpdatedText = document.getElementById("lastUpdatedText");
+
+    const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+    async function fetchNDJSON(url) {
+      const response = await fetch(url, {
+        headers: { Accept: "application/x-ndjson" }
+      });
+      if (response.status === 429) {
+        await sleep(3500);
+        const retry = await fetch(url, { headers: { Accept: "application/x-ndjson" } });
+        if (!retry.ok) throw new Error(`HTTP ${retry.status}`);
+        const retryText = await retry.text();
+        return parseNDJSONText(retryText);
+      }
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status} on ${url}`);
+      }
+      const text = await response.text();
+      return parseNDJSONText(text);
+    }
+
+    function parseNDJSONText(text) {
+      return text
+        .trim()
+        .split("\n")
+        .filter((line) => line.trim().length > 0)
+        .map((line) => {
+          try {
+            return JSON.parse(line);
+          } catch (e) {
+            return null;
+          }
+        })
+        .filter(Boolean);
+    }
+
+    async function loadTeamData(forceFresh = false) {
+      if (isFetching) return;
+      isFetching = true;
+      fetchBtn.disabled = true;
+
+      // If user clicked "Scan Live Lichess API", clear cache so it explicitly redoes everything from scratch
+      if (forceFresh) {
+        try {
+          localStorage.removeItem(CACHE_KEY);
+        } catch (e) {}
+      }
+
+      const mode = modeSelect.value;
+      const rawLimit = battleLimitSelect.value;
+      const isUnlimited = rawLimit === "all";
+      const limit = isUnlimited ? Infinity : parseInt(rawLimit, 10);
+
+      const playerMap = new Map();
+      const memberSet = new Set();
+      scannedTournaments = [];
+
+      let totalTeamPoints = 0;
+
+      progressWrapper.style.display = "block";
+      progressStatus.textContent = "Step 1/3: Loading Berserking Outlaws member roster...";
+      progressCount.textContent = "";
+      progressFill.style.width = "8%";
+
+      try {
+        try {
+          const users = await fetchNDJSON(`https://lichess.org/api/team/${TEAM_ID}/users`);
+          for (const u of users) {
+            const uname = u.username || u.name || u.id;
+            if (!uname) continue;
+            const key = uname.toLowerCase();
+            memberSet.add(key);
+
+            const blitz = u.perfs?.blitz?.rating || u.perfs?.rapid?.rating || u.perfs?.bullet?.rating || null;
+            playerMap.set(key, {
+              username: uname,
+              title: u.title || "",
+              points: 0,
+              battles: 0,
+              best: 0,
+              rating: blitz || 0
+            });
+          }
+        } catch (memberErr) {
+          console.warn("Could not load full roster, falling back to tournament participants:", memberErr);
+        }
+
+        updateSummaryCards(0, 0, playerMap.size, 0);
+        playersData = Array.from(playerMap.values()).map((p) => ({ ...p, avg: 0 }));
+        renderTable();
+
+        progressStatus.textContent = "Step 2/3: Fetching entire team tournament history from Lichess...";
+        progressFill.style.width = "18%";
+
+        const arenaQuery = isUnlimited
+          ? `https://lichess.org/api/team/${TEAM_ID}/arena?max=10000`
+          : `https://lichess.org/api/team/${TEAM_ID}/arena?max=${limit * 2}`;
+
+        const arenas = await fetchNDJSON(arenaQuery);
+        let swissList = [];
+        if (mode === "all") {
+          try {
+            const swissQuery = isUnlimited
+              ? `https://lichess.org/api/team/${TEAM_ID}/swiss?max=10000`
+              : `https://lichess.org/api/team/${TEAM_ID}/swiss?max=${limit}`;
+            swissList = await fetchNDJSON(swissQuery);
+          } catch (e) {
+            console.warn("Swiss fetch skipped:", e);
+          }
+        }
+
+        const eventQueue = [];
+        const seenIds = new Set();
+
+        for (const a of arenas) {
+          if (!a || !a.id || seenIds.has(a.id)) continue;
+          const isTeamBattle = Boolean(a.teamBattle);
+          if (mode === "teamBattle" && !isTeamBattle) continue;
+
+          seenIds.add(a.id);
+          eventQueue.push({
+            id: a.id,
+            name: a.fullName || a.name || `Arena ${a.id}`,
+            type: isTeamBattle ? "Team Battle" : "Team Arena",
+            kind: "arena",
+            isTeamBattle,
+            startsAt: a.startsAt || 0
+          });
+        }
+
+        if (mode === "all") {
+          for (const s of swissList) {
+            if (!s || !s.id || seenIds.has(s.id)) continue;
+            seenIds.add(s.id);
+            eventQueue.push({
+              id: s.id,
+              name: s.name || `Swiss ${s.id}`,
+              type: "Team Swiss",
+              kind: "swiss",
+              isTeamBattle: false,
+              startsAt: s.startsAt ? new Date(s.startsAt).getTime() : 0
+            });
+          }
+        }
+
+        for (const seedId of SEED_TOURNAMENT_IDS) {
+          if (!seenIds.has(seedId) && mode !== "teamBattle") {
+            seenIds.add(seedId);
+            eventQueue.push({
+              id: seedId,
+              name: `Featured Outlaws Event (${seedId})`,
+              type: "Featured Arena",
+              kind: "arena",
+              isTeamBattle: false,
+              startsAt: 0
+            });
+          }
+        }
+
+        const eventsToScan = isUnlimited ? eventQueue : eventQueue.slice(0, limit);
+
+        if (eventsToScan.length === 0) {
+          progressStatus.textContent = "No matching tournaments found.";
+          renderTable();
+          return;
+        }
+
+        for (let i = 0; i < eventsToScan.length; i++) {
+          const ev = eventsToScan[i];
+          progressStatus.textContent = `Scanning (${i + 1}/${eventsToScan.length}): ${ev.name}`;
+          progressCount.textContent = `${i + 1} / ${eventsToScan.length}`;
+          progressFill.style.width = `${Math.min(100, Math.round(20 + ((i + 1) / eventsToScan.length) * 80))}%`;
+
+          try {
+            const endpoint =
+              ev.kind === "swiss"
+                ? `https://lichess.org/api/swiss/${ev.id}/results`
+                : `https://lichess.org/api/tournament/${ev.id}/results`;
+
+            const results = await fetchNDJSON(endpoint);
+            let eventTeamPoints = 0;
+            let eventOutlawCount = 0;
+            let topScorerName = "—";
+            let topScorerPts = -1;
+
+            for (const entry of results) {
+              const uname = entry.username;
+              if (!uname) continue;
+              const key = uname.toLowerCase();
+
+              const entryTeam = (entry.team || "").toLowerCase();
+              const belongsToOutlaws =
+                entryTeam === TEAM_ID ||
+                (!entryTeam && (!ev.isTeamBattle || memberSet.has(key)));
+
+              if (belongsToOutlaws) {
+                const rawScore =
+                  typeof entry.score === "number"
+                    ? entry.score
+                    : typeof entry.points === "number"
+                    ? entry.points
+                    : 0;
+
+                eventTeamPoints += rawScore;
+                eventOutlawCount++;
+                totalTeamPoints += rawScore;
+
+                if (rawScore > topScorerPts) {
+                  topScorerPts = rawScore;
+                  topScorerName = `${uname} (${rawScore})`;
+                }
+
+                if (!playerMap.has(key)) {
+                  playerMap.set(key, {
+                    username: uname,
+                    title: entry.title || "",
+                    points: 0,
+                    battles: 0,
+                    best: 0,
+                    rating: entry.rating || 0
+                  });
+                }
+
+                const p = playerMap.get(key);
+                p.points += rawScore;
+                p.battles += 1;
+                if (rawScore > p.best) p.best = rawScore;
+                if (!p.title && entry.title) p.title = entry.title;
+                if (!p.rating && entry.rating) p.rating = entry.rating;
+              }
+            }
+
+            if (eventOutlawCount > 0) {
+              scannedTournaments.push({
+                id: ev.id,
+                name: ev.name,
+                type: ev.type,
+                kind: ev.kind,
+                startsAt: ev.startsAt,
+                players: eventOutlawCount,
+                points: eventTeamPoints,
+                topScorer: topScorerName
+              });
+            }
+
+            playersData = Array.from(playerMap.values()).map((p) => ({
+              ...p,
+              avg: p.battles > 0 ? p.points / p.battles : 0
+            }));
+
+            const scorersCount = playersData.filter((p) => p.points > 0).length;
+            updateSummaryCards(
+              scannedTournaments.length,
+              scorersCount,
+              playerMap.size,
+              totalTeamPoints
+            );
+            renderTable();
+            renderBattlesTable();
+          } catch (err) {
+            console.warn(`Skipped tournament ${ev.id}:`, err);
+          }
+
+          await sleep(180);
+        }
+
+        const nowStr = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        lastUpdatedText.textContent = `Last updated from live Lichess API at ${nowStr} (All ${scannedTournaments.length} events aggregated).`;
+
+        try {
+          localStorage.setItem(
+            CACHE_KEY,
+            JSON.stringify({
+              timestamp: Date.now(),
+              playersData,
+              scannedTournaments,
+              totalTeamPoints
+            })
+          );
+        } catch (e) {}
+      } catch (err) {
+        console.error(err);
+        lastUpdatedText.textContent = "Notice: Could not reach Lichess API directly. Check connection or click Scan Live Lichess API.";
+      } finally {
+        isFetching = false;
+        fetchBtn.disabled = false;
+        setTimeout(() => {
+          progressWrapper.style.display = "none";
+        }, 1200);
+      }
+    }
+
+    function updateSummaryCards(battles, scorers, members, points) {
+      document.getElementById("statBattles").textContent = battles.toLocaleString();
+      document.getElementById("statScorers").textContent = scorers.toLocaleString();
+      document.getElementById("statMembers").textContent = members.toLocaleString();
+      document.getElementById("statTotalPoints").textContent = points.toLocaleString();
+      document.getElementById("tabBattleCount").textContent = battles;
+    }
+
+    function renderTable() {
+      const query = searchInput.value.trim().toLowerCase();
+      const rosterMode = rosterFilterSelect.value;
+
+      const rankSorted = [...playersData].sort((a, b) => {
+        if (b.points !== a.points) return b.points - a.points;
+        if (b.battles !== a.battles) return b.battles - a.battles;
+        return (b.rating || 0) - (a.rating || 0);
+      });
+      const rankMap = new Map(rankSorted.map((p, idx) => [p.username.toLowerCase(), idx + 1]));
+
+      const sorted = [...playersData].sort((a, b) => {
+        const valA = a[currentSort.key];
+        const valB = b[currentSort.key];
+        if (typeof valA === "string") {
+          return currentSort.asc ? valA.localeCompare(valB) : valB.localeCompare(valA);
+        }
+        if (valB !== valA) {
+          return currentSort.asc ? valA - valB : valB - valA;
+        }
+        return (b.rating || 0) - (a.rating || 0);
+      });
+
+      const filtered = sorted.filter((p) => {
+        if (rosterMode === "scorers" && p.points <= 0) return false;
+        if (query && !p.username.toLowerCase().includes(query)) return false;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        leaderboardBody.innerHTML = `<tr><td colspan="7" class="empty-state">No matching players found. Try switching "Show" to "All Team Members".</td></tr>`;
+        return;
+      }
+
+      leaderboardBody.innerHTML = filtered
+        .map((p) => {
+          const key = p.username.toLowerCase();
+          const rank = rankMap.get(key) || "-";
+          const rankClass = rank <= 3 && p.points > 0 ? `rank-${rank}` : "";
+          const badge = p.title ? `<span class="title-badge">${p.title}</span>` : "";
+          const isLeader = KNOWN_LEADERS.has(key)
+            ? `<span class="leader-tag">Leader</span>`
+            : "";
+          const ptsClass = p.points > 0 ? "points-cell" : "zero-points";
+
+          return `
+            <tr>
+              <td class="rank ${rankClass}">#${rank}</td>
+              <td>
+                <a class="player-link" href="https://lichess.org/@/${p.username}" target="_blank" rel="noopener">
+                  ${badge}
+                  <span>${p.username}</span>
+                  ${isLeader}
+                </a>
+              </td>
+              <td class="${ptsClass}">${p.points.toLocaleString()}</td>
+              <td>${p.battles}</td>
+              <td>${p.avg.toFixed(1)}</td>
+              <td>${p.best}</td>
+              <td>${p.rating ? p.rating : "—"}</td>
+            </tr>
+          `;
+        })
+        .join("");
+    }
+
+    function renderBattlesTable() {
+      if (scannedTournaments.length === 0) {
+        battlesBody.innerHTML = `<tr><td colspan="6" class="empty-state">No tournaments with Berserking Outlaws scores found yet.</td></tr>`;
+        return;
+      }
+
+      battlesBody.innerHTML = scannedTournaments
+        .map((t) => {
+          const url =
+            t.kind === "swiss"
+              ? `https://lichess.org/swiss/${t.id}`
+              : `https://lichess.org/tournament/${t.id}`;
+          const dateStr = t.startsAt
+            ? new Date(t.startsAt).toLocaleDateString()
+            : "Completed";
+          const typeClass =
+            t.type === "Team Battle"
+              ? "badge-battle"
+              : t.type === "Team Swiss"
+              ? "badge-swiss"
+              : "";
+
+          return `
+            <tr>
+              <td>
+                <a class="player-link" href="${url}" target="_blank" rel="noopener">${t.name}</a>
+              </td>
+              <td><span class="badge-type ${typeClass}">${t.type}</span></td>
+              <td>${dateStr}</td>
+              <td>${t.players}</td>
+              <td class="points-cell">${t.points.toLocaleString()}</td>
+              <td>${t.topScorer}</td>
+            </tr>
+          `;
+        })
+        .join("");
+    }
+
+    function exportCSV() {
+      if (!playersData.length) return;
+      const sorted = [...playersData].sort((a, b) => b.points - a.points);
+      const rows = [
+        ["Rank", "Username", "Title", "Total Points", "Events Played", "Avg Points", "Best Score", "Rating"]
+      ];
+      sorted.forEach((p, idx) => {
+        rows.push([
+          idx + 1,
+          p.username,
+          p.title || "",
+          p.points,
+          p.battles,
+          p.avg.toFixed(2),
+          p.best,
+          p.rating || ""
+        ]);
+      });
+      const csvContent = rows.map((r) => r.join(",")).join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "berserking-outlaws-leaderboard-all-events.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    document.querySelectorAll("th[data-sort]").forEach((th) => {
+      th.addEventListener("click", () => {
+        const key = th.dataset.sort;
+        if (key === "rank") {
+          currentSort = { key: "points", asc: false };
+        } else if (currentSort.key === key) {
+          currentSort.asc = !currentSort.asc;
+        } else {
+          currentSort.key = key;
+          currentSort.asc = key === "username";
+        }
+        renderTable();
+      });
+    });
+
+    document.querySelectorAll(".tab-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll(".tab-content").forEach((c) => c.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.tab).classList.add("active");
+      });
+    });
+
+    searchInput.addEventListener("input", renderTable);
+    rosterFilterSelect.addEventListener("change", () => loadTeamData(false));
+    modeSelect.addEventListener("change", () => loadTeamData(false));
+    battleLimitSelect.addEventListener("change", () => loadTeamData(false));
+    
+    // Explicitly force a fresh clean re-scan when the user clicks "Scan Live Lichess API"
+    fetchBtn.addEventListener("click", () => loadTeamData(true));
+    exportBtn.addEventListener("click", exportCSV);
+
+    // On initial load, try cache first so it opens instantly, then load fresh
+    try {
+      const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || "null");
+      if (cached && Array.isArray(cached.playersData) && cached.playersData.length > 0) {
+        playersData = cached.playersData;
+        scannedTournaments = cached.scannedTournaments || [];
+        const scorersCount = playersData.filter((p) => p.points > 0).length;
+        updateSummaryCards(
+          scannedTournaments.length,
+          scorersCount,
+          playersData.length,
+          cached.totalTeamPoints || 0
+        );
+        renderTable();
+        renderBattlesTable();
+      }
+    } catch (e) {}
+
+    loadTeamData(false);
+  </script>
+</body>
+</html>
